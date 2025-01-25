@@ -16,17 +16,18 @@
  */
 int main(int argc, char** argv)
 {
-    fprintf(stdout, "Start Of Program \n");
+    fprintf(stdout, "Start Of Program\n");
     
-    /* get command line options, and run rpogram */
+    /* get command line options, and run program */
     cPdctOptions aMainOptions;
-    if(aMainOptions.parseCommandLine(argc, argv)){
-        cPdctMain aMainProagram;
-        aMainProagram.run(aMainOptions);
+    if (aMainOptions.parseCommandLine(argc, argv)) {
+        cPdctMain aMainProgram;
+        aMainProgram.run(aMainOptions);
+    } else {
+        fprintf(stderr, "Error: Failed to parse command line options\n");
+        return 1;
     }
     
-    fprintf(stdout, "End Of Program \n");
-   
+    fprintf(stdout, "End Of Program\n");
     return 0;
 }
-

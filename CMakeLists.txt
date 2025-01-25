@@ -87,7 +87,7 @@ add_subdirectory (pdct_lib)
 include_directories (${INCLUDE_FOLDER})
 
 # main executable
-add_executable(pdct pdct_main.cpp)
+add_executable(pdct ${PROJECT_SOURCE_DIR}/pdct_lib/pdct_main.cpp)
 
 target_link_libraries (pdct  pdct_lib asound pthread sndfile jack ${wxWidgets_LIBRARIES})
 
