@@ -33,4 +33,5 @@ nbproject/
 dist/
 .kdev4/
 pdct_lib/pdct_lib.kdev4
-/__pycache__/
+__pycache__/
+*.pyc
