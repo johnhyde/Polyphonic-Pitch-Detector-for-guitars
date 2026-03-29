@@ -1,0 +1,21 @@
+# Benchmark dependencies for the polyphonic pitch detection evaluation
+
+# Core scientific stack
+numpy>=1.24
+scipy>=1.10
+
+# Audio I/O and resampling
+librosa>=0.10
+soundfile>=0.12
+
+# MIR evaluation
+mir_eval>=0.7
+
+# JAMS annotation format (required for GuitarSet)
+jams>=0.3.4
+
+# Data handling and output
+pandas>=2.0
+
+# Progress bars (optional but recommended)
+tqdm>=4.65
