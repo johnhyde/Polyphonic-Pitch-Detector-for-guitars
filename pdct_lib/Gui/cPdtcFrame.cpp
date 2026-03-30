@@ -92,6 +92,8 @@ cPdtcFrame::cPdtcFrame(const wxString& title):
     m_sineSource.addSineWave(cSineWave(81,0.5));    
     setSimulationMode(MODE_SINE);
     
+    m_pdctSimul.setInputChannel(m_settings.getInputChannel());
+
     m_audioDriver.attachProcess(this);
     m_audioDriver.open("PdctApp");
 }
@@ -199,14 +201,11 @@ void cPdtcFrame::OnAbout(wxCommandEvent& /*event*/)
     wxMessageBox( wxT("Pitch Dectect App.\nVersion 0.02.\nWith Audio Input Support.") );
 }
 
-void cPdtcFrame::OnSettings(wxCommandEvent& /*event*/) 
-{     
+void cPdtcFrame::OnSettings(wxCommandEvent& /*event*/)
+{
     cPdctSettingsDialog settingsDialog (this,-1,"Settings");
-    if ( settingsDialog.ShowModal() == wxID_OK ){
-//        wxMessageBox( wxT("OK!!!!!!") );
-    } else {
-//        wxMessageBox( wxT("Cancel!!!!!!") );
-    }
+    settingsDialog.ShowModal();
+    m_pdctSimul.setInputChannel(m_settings.getInputChannel());
 }
 
 void cPdtcFrame::OnSourceSine(wxCommandEvent& /*event*/) 

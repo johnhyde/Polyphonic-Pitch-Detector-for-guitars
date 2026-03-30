@@ -22,6 +22,7 @@ private:
         wxID_SIMULATION_SPEED,
         wxID_SIMULATION_DBINP,
         wxID_SIMULATION_DBOUT,
+        wxID_INPUT_CHANNEL,
         wxID_NOTE_NAME,
         wxID_RESET_SETTINGS
     };
@@ -29,12 +30,14 @@ private:
     wxSpinCtrlDouble* m_speedCtrl;
     wxSpinCtrlDouble* m_dbInCtrl;
     wxSpinCtrlDouble* m_dbOutCtrl;
+    wxSpinCtrl*       m_chInCtrl;
     wxRadioBox* m_noteName;
 private:
     void OnResetSettings(wxCommandEvent& event);
     void onSpeedChange(wxSpinDoubleEvent& event);
     void onInputChange(wxSpinDoubleEvent& event);
     void onOutputChange(wxSpinDoubleEvent& event);
+    void onInputChannelChange(wxSpinEvent& event);
     void OnRadioBoxNoteName(wxCommandEvent& event);
 };
 

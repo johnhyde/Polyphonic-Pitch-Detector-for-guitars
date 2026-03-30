@@ -19,6 +19,7 @@ private:
     int m_noteNameMode;
     float m_audioOutputVolumedB;
     float m_audioInputVolumedB;
+    int m_inputChannel;
 public:
     void load();
     void save();
@@ -50,6 +51,12 @@ public:
     }
     void setAudioInputVolumedB(float value){
         m_audioInputVolumedB = value;
+    }
+    int getInputChannel(){
+        return m_inputChannel;
+    }
+    void setInputChannel(int value){
+        m_inputChannel = value;
     }
     void setDefault();
 };

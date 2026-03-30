@@ -94,8 +94,13 @@ void cPdctSimul::connectOutput(cPdctOutput* output)
     m_pdct.connectOutput(output);
 }
 
-int cPdctSimul::getNoteMap(int resonator) 
+int cPdctSimul::getNoteMap(int resonator)
 {
     return m_pdct.getNoteMapState(resonator);
+}
+
+void cPdctSimul::setInputChannel(int channel)
+{
+    m_pdct.setInputChannel(channel);
 }
 

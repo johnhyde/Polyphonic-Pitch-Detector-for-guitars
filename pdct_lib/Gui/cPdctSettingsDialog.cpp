@@ -10,8 +10,8 @@
 #include "cPdtcFrame.h"
 #include "wx/radiobox.h"
 
-cPdctSettingsDialog::cPdctSettingsDialog( wxWindow * parent, wxWindowID id, const wxString& title) : 
-    wxDialog(parent, id, title, wxDefaultPosition, wxSize(250, 290)) {
+cPdctSettingsDialog::cPdctSettingsDialog( wxWindow * parent, wxWindowID id, const wxString& title) :
+    wxDialog(parent, id, title, wxDefaultPosition, wxSize(250, 325)) {
     cPdtcFrame *frame = (cPdtcFrame *) parent;
     m_settings = frame->getSettings();
 
@@ -20,7 +20,7 @@ cPdctSettingsDialog::cPdctSettingsDialog( wxWindow * parent, wxWindowID id, cons
     wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer *hbox = new wxBoxSizer(wxHORIZONTAL);
 
-    wxStaticBox *st = new wxStaticBox(panel, -1, wxT("Simulation"), wxPoint(5, 5), wxSize(240, 125));
+    wxStaticBox *st = new wxStaticBox(panel, -1, wxT("Simulation"), wxPoint(5, 5), wxSize(240, 160));
     wxStaticText* speed = new wxStaticText(panel, -1, wxT("Speed [x]:"), wxPoint(15, 35));
     m_speedCtrl = new wxSpinCtrlDouble(panel, wxID_SIMULATION_SPEED, wxT(""), wxPoint(110, 30));
     m_speedCtrl->SetDigits(1);
@@ -46,6 +46,12 @@ cPdctSettingsDialog::cPdctSettingsDialog( wxWindow * parent, wxWindowID id, cons
     m_dbOutCtrl->SetIncrement(0.5);
     UNUSED(dbOut);
 
+    wxStaticText* chIn = new wxStaticText(panel, -1, wxT("Input Channel:"), wxPoint(15, 140));
+    m_chInCtrl = new wxSpinCtrl(panel, wxID_INPUT_CHANNEL, wxT(""), wxPoint(110, 135));
+    m_chInCtrl->SetRange(0, 31);
+    m_chInCtrl->SetValue(m_settings->getInputChannel());
+    UNUSED(chIn);
+
     wxPanel *panel2 = new wxPanel(this, -1);
     wxArrayString strings;
     strings.Add(wxT("&C, D, E, F, G, A, B"));
@@ -70,6 +76,7 @@ cPdctSettingsDialog::cPdctSettingsDialog( wxWindow * parent, wxWindowID id, cons
     Connect(wxID_SIMULATION_SPEED, wxEVT_SPINCTRLDOUBLE, wxSpinDoubleEventHandler(cPdctSettingsDialog::onSpeedChange));
     Connect(wxID_SIMULATION_DBINP, wxEVT_SPINCTRLDOUBLE, wxSpinDoubleEventHandler(cPdctSettingsDialog::onInputChange));
     Connect(wxID_SIMULATION_DBOUT, wxEVT_SPINCTRLDOUBLE, wxSpinDoubleEventHandler(cPdctSettingsDialog::onOutputChange));
+    Connect(wxID_INPUT_CHANNEL, wxEVT_SPINCTRL, wxSpinEventHandler(cPdctSettingsDialog::onInputChannelChange));
     Connect(wxID_NOTE_NAME, wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler(cPdctSettingsDialog::OnRadioBoxNoteName));
 
     SetSizer(vbox);
@@ -93,9 +100,14 @@ void cPdctSettingsDialog::onInputChange(wxSpinDoubleEvent& event)
     m_settings->setAudioInputVolumedB(event.GetValue());
 }
 
-void cPdctSettingsDialog::onOutputChange(wxSpinDoubleEvent& event) 
+void cPdctSettingsDialog::onOutputChange(wxSpinDoubleEvent& event)
 {
     m_settings->setAudioOutputVolumedB(event.GetValue());
+}
+
+void cPdctSettingsDialog::onInputChannelChange(wxSpinEvent& event)
+{
+    m_settings->setInputChannel(event.GetValue());
 }
 
 void cPdctSettingsDialog::OnRadioBoxNoteName(wxCommandEvent& event) 
@@ -110,6 +122,7 @@ void cPdctSettingsDialog::OnResetSettings(wxCommandEvent& /*event*/)
     m_speedCtrl->SetValue(m_settings->getSimulationSpeed());
     m_dbInCtrl->SetValue(m_settings->getAudioInputVolumedB());
     m_dbOutCtrl->SetValue(m_settings->getAudioOutputVolumedB());
+    m_chInCtrl->SetValue(m_settings->getInputChannel());
     m_noteName->SetSelection(m_settings->getNoteNameMode());
 }
 

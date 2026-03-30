@@ -28,6 +28,7 @@ public:
     int stop();
     int pause();
     void setSource(cAudioSource* source);
+    void setInputChannel(int channel);
     cFloat getResonatorEnergy(int resonator);
     cFloat getSimulationTime();
     int getNoteMap(int resonator);

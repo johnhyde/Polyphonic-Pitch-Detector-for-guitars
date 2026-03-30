@@ -9,6 +9,7 @@
 
 cPdct::cPdct() :
     m_resonator(),
+    m_inputChannel(0),
     m_output(NULL)
 {
 //    init();
@@ -25,9 +26,14 @@ cFloat cPdct::noteToFrequency(int note)
     return pow(2.0, (note-69)/12.0)*440.0;
 }
 
-void cPdct::connectOutput(cPdctOutput* output) 
+void cPdct::connectOutput(cPdctOutput* output)
 {
     m_output = output;
+}
+
+void cPdct::setInputChannel(int channel)
+{
+    m_inputChannel = channel;
 }
 
 void cPdct::outputNoteOn(int resonator) 
@@ -149,8 +155,12 @@ void cPdct::reset()
     m_inputEnergy = 0.0;
 }
 
-void cPdct::process(cFloat* in, int frame, int channels) 
+void cPdct::process(cFloat* in, int frame, int channels)
 {
+    /* advance pointer to the selected channel within the interleaved buffer */
+    int ch = (m_inputChannel < channels) ? m_inputChannel : 0;
+    in += ch;
+
     cComplex output;
     for(int i=0; i<frame; i++) {
         /* get input signal */

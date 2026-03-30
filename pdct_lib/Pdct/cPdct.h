@@ -36,6 +36,7 @@ private:
     cFloat m_inputEnergy;
     long int m_tick;
     int m_frame;
+    int m_inputChannel;
     cPdctOutput* m_output;
 private:
     cFloat noteToFrequency(int note);
@@ -45,6 +46,7 @@ private:
 public:
     void init();
     void reset();
+    void setInputChannel(int channel);
     void process(cFloat* in, int frame, int channels);
     void printEnergy();
     void printCoef();

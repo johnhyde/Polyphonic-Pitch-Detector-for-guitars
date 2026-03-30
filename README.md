@@ -37,6 +37,8 @@ A C++ version of the algorithm is currently being prepared and is available with
 1. Clone the repository:
 ```
 git clone https://github.com/luciamarockmood/pdct_lib.git
+# Mac
+brew install cmake wxwidgets libsndfile
 ```
 
 2. Navigate to the repository directory:
@@ -48,7 +50,10 @@ cd build
 3. Build the project:
 ```
 cmake ..
+# Linux
 make
+# Mac
+make -j$(sysctl -n hw.logicalcpu)
 ```
 
 4. Run the program (Jack Server must be running):
