@@ -16,10 +16,16 @@ set (pdct_VERSION_MINOR 1)
 set (pdct_VERSION_PATCH 1)
 set (pdct_VERSION_BUILD 1)
 
-# hardware acceleration
-set ( GNUCC_HARDWARE_FLAGS "-msse4.2" )
-set ( ENABLE_INT_SSE 1)
-set ( ENABLE_ARM_NEON 0)
+# hardware acceleration — SSE4.2 on x86, no SIMD flags on Apple Silicon
+if(APPLE AND CMAKE_SYSTEM_PROCESSOR MATCHES "arm64")
+    set ( GNUCC_HARDWARE_FLAGS "" )
+    set ( ENABLE_INT_SSE 0)
+    set ( ENABLE_ARM_NEON 0)
+else()
+    set ( GNUCC_HARDWARE_FLAGS "-msse4.2" )
+    set ( ENABLE_INT_SSE 1)
+    set ( ENABLE_ARM_NEON 0)
+endif()
 set ( HYPER_THREADING_COUNT 2)
 set ( ENABLE_EMBEDDED 0)
 
@@ -57,10 +63,12 @@ if ( enable-log )
 set ( ENABLE_LOG 1)
 endif ( enable-log )
 
-# does this system provide the .... functions?
+# does this system provide the required libraries?
 include(CheckLibraryExists)
 CHECK_LIBRARY_EXISTS(pthread pthread_create "<pthread.h>" HAVE_PTHREAD)
-CHECK_LIBRARY_EXISTS(asound snd_seq_open "<alsa/asoundlib.h>" HAVE_ASOUND)
+if(NOT APPLE)
+    CHECK_LIBRARY_EXISTS(asound snd_seq_open "<alsa/asoundlib.h>" HAVE_ASOUND)
+endif()
 
 # wxwidgets file
 find_package(wxWidgets COMPONENTS core base REQUIRED)
@@ -89,7 +97,21 @@ include_directories (${INCLUDE_FOLDER})
 # main executable
 add_executable(pdct ${PROJECT_SOURCE_DIR}/pdct_lib/pdct_main.cpp)
 
-target_link_libraries (pdct  pdct_lib asound pthread sndfile jack ${wxWidgets_LIBRARIES})
+if(APPLE)
+    find_library(COREAUDIO_LIB   CoreAudio   REQUIRED)
+    find_library(AUDIOUNIT_LIB   AudioUnit   REQUIRED)
+    find_library(AUDIOTOOLBOX_LIB AudioToolbox REQUIRED)
+    find_library(COREFOUNDATION_LIB CoreFoundation REQUIRED)
+    target_link_libraries (pdct  pdct_lib
+        pthread sndfile
+        ${COREAUDIO_LIB}
+        ${AUDIOUNIT_LIB}
+        ${AUDIOTOOLBOX_LIB}
+        ${COREFOUNDATION_LIB}
+        ${wxWidgets_LIBRARIES})
+else()
+    target_link_libraries (pdct  pdct_lib asound pthread sndfile jack ${wxWidgets_LIBRARIES})
+endif()
 
 #install executable
 install (TARGETS pdct DESTINATION bin)
@@ -100,8 +122,12 @@ set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set (CPACK_PACKAGE_VERSION_MAJOR "${pdct_VERSION_MAJOR}")
 set (CPACK_PACKAGE_VERSION_MINOR "${pdct_VERSION_MINOR}")
 set (CPACK_PACKAGE_VERSION_PATCH "${pdct_VERSION_PATCH}")
-set (CPACK_GENERATOR "DEB")
-set (CPACK_DEBIAN_PACKAGE_MAINTAINER "Andrea Celani")
+if(APPLE)
+    set (CPACK_GENERATOR "DragNDrop")
+else()
+    set (CPACK_GENERATOR "DEB")
+    set (CPACK_DEBIAN_PACKAGE_MAINTAINER "Andrea Celani")
+endif()
 include (CPack)
 
 # print info about compilation flags

@@ -92,8 +92,8 @@ cPdtcFrame::cPdtcFrame(const wxString& title):
     m_sineSource.addSineWave(cSineWave(81,0.5));    
     setSimulationMode(MODE_SINE);
     
-    m_jackdDriver.attachProcess(this);
-    m_jackdDriver.open("PdctApp");
+    m_audioDriver.attachProcess(this);
+    m_audioDriver.open("PdctApp");
 }
 
 

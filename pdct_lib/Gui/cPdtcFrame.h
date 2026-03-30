@@ -17,11 +17,15 @@
 #include "cWavSource.h"
 #include "cBuffSource.h"
 #include "cPdctSettings.h"
+#ifdef __APPLE__
+#include "cCoreAudioDriver.h"
+#else
 #include "cJackdDriver.h"
+#endif
 #include "cPdctOutput.h"
 
-class cPdtcFrame: public wxFrame, 
-                  public cJackProcess, 
+class cPdtcFrame: public wxFrame,
+                  public cJackProcess,
                   public cPdctOutput {
 public:
     cPdtcFrame(const wxString& title);
@@ -67,7 +71,11 @@ private:
     cWavSource m_waveSource;
     cBuffSource m_buffSource;
     cPdctSimul m_pdctSimul;
-    cJackdDriver m_jackdDriver;
+#ifdef __APPLE__
+    cCoreAudioDriver m_audioDriver;
+#else
+    cJackdDriver m_audioDriver;
+#endif
 private:
     void setSimulationMode(int mode);
     void startSimulation();
